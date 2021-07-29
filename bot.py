@@ -1,18 +1,22 @@
 import discord
 from discord.ext import commands
-import json
-import os
+from discord_slash import SlashCommand
 
-from utils.utils import get_cogs, get_config
+from utils import get_cogs, get_config
 
-config = get_config()
+intents = discord.Intents.default()
+intents.typing = False
+intents.presences = False
+
+config = get_config.get_config()
 
 TOKEN = config['token']
 PREFIX = config['prefix']
 
-client = commands.Bot(command_prefix=PREFIX, help_command=None)
+client = commands.Bot(command_prefix=PREFIX, help_command=None, inents=intents)
+slash = SlashCommand(client, sync_commands=True)
 
-for cog in get_cogs():
+for cog in get_cogs.get_cogs():
     try:
         client.load_extension(cog)
         print(f'{cog} loaded')

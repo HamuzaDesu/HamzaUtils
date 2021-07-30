@@ -4,8 +4,7 @@ from discord_slash import cog_ext
 from discord_slash.utils.manage_commands import create_option, create_permission
 from discord_slash.model import SlashCommandOptionType, SlashCommandPermissionType
 
-from utils import get_ip, delete_message
-
+import utils
 
 class Practical(commands.Cog):
     def __init__(self, bot):
@@ -15,36 +14,36 @@ class Practical(commands.Cog):
     @commands.command(aliases=['ip', 'getip', 'ipaddress'])
 
     async def getIP(self, ctx):
-        message = await ctx.send(f'De cuwwent ip addwess is **{get_ip.get_ip()}**')
-        await delete_message.delete_message(message, ctx, 5)
+        message = await ctx.send(f'De cuwwent ip addwess is **{utils.get_ip()}**')
+        await utils.delete_message(message, ctx, 5)
 
     # GET IP SLASH COMMAND
-    # @cog_ext.cog_slash(
-    #     name="getIP",
-    #     guild_ids=[685842225875386369],
-    #     description="Get the IP address of Hamza's router",
-    #     options=[
-    #         create_option(
-    #             name="hidden",
-    #             description="Whether or not to make the ip visible to only you",
-    #             option_type=SlashCommandOptionType.BOOLEAN,
-    #             required=False
-    #         )
-    #     ]
-    # )
-    # @cog_ext.permission(
-    #     guild_id=685842225875386369,
-    #     permissions=[
-    #         create_permission(757592018661670932, SlashCommandPermissionType.ROLE, True),
-    #         create_permission(685842225875386369, SlashCommandPermissionType.ROLE, False)
-    #     ]
-    # )
-    # async def _getIP(self, ctx, hidden=False):
-    #     message = f'De cuwwent ip addwess is **{get_ip.get_ip()}**'
-    #     if hidden == True:
-    #         await ctx.send(content=message, hidden=True)
-    #     else:
-    #         await ctx.send(content=message)
+    @cog_ext.cog_slash(
+        name="getIP",
+        guild_ids=[685842225875386369],
+        description="Get the IP address of Hamza's router",
+        options=[
+            create_option(
+                name="hidden",
+                description="Whether or not to make the ip visible to only you",
+                option_type=SlashCommandOptionType.BOOLEAN,
+                required=False
+            )
+        ]
+    )
+    @cog_ext.permission(
+        guild_id=685842225875386369,
+        permissions=[
+            create_permission(757592018661670932, SlashCommandPermissionType.ROLE, True),
+            create_permission(685842225875386369, SlashCommandPermissionType.ROLE, False)
+        ]
+    )
+    async def _getIP(self, ctx, hidden=False):
+        message = f'De cuwwent ip addwess is **{utils.get_ip()}**'
+        if hidden == True:
+            await ctx.send(content=message, hidden=True)
+        else:
+            await ctx.send(content=message)
 
     @commands.command()
     async def help(self, ctx):

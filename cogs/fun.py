@@ -1,11 +1,12 @@
 import asyncio
-from os import name
 import discord
 from discord.ext import commands
-from discord.ext.commands import cog
+
 from discord_slash import cog_ext
+from discord_slash.utils import manage_commands
 from discord_slash.utils.manage_commands import create_option
 from discord_slash.model import SlashCommandOptionType
+
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -37,7 +38,12 @@ class Fun(commands.Cog):
             await asyncio.sleep(time)
         await ctx.send(f'{ctx.message.author.mention}, your timer has finished!')
 
-    async def sendAvatar(self, ctx, member):
+
+    
+    @commands.command(aliases=['av', 'ava'])
+    async def avatar(self, ctx, member: discord.Member=None):
+        if member == None:
+            member = ctx.message.author
         avatarLink = member.avatar_url
 
         avatarEmbed = discord.Embed(colour=discord.Colour.blurple())
@@ -47,30 +53,32 @@ class Fun(commands.Cog):
 
         await ctx.send(embed=avatarEmbed)
 
-    
-    @commands.command(aliases=['av', 'ava'])
-    async def avatar(self, ctx, member: discord.Member=None):
+    @cog_ext.cog_slash(
+        name="avatar",
+        guild_ids=[685842225875386369],
+        description="Display a users avatar",
+        options=[
+            create_option(
+                name="member",
+                description="User to get avatar from",
+                option_type=SlashCommandOptionType.USER,
+                required=False
+            )
+        ]
+    )
+    async def _avatar(self, ctx, member=None):
         if member == None:
-            member = ctx.message.author
-        await self.sendAvatar(ctx, member)
+            member = ctx.author
 
-    # @cog_ext.cog_slash(
-    #     name="avatarr",
-    #     guild_ids=[685842225875386369],
-    #     description="Display a users avatar",
-    #     options=[
-    #         create_option(
-    #             name="user",
-    #             description="User to get avatar from",
-    #             option_type=SlashCommandOptionType,
-    #             required=False
-    #         )
-    #     ]
-    # )
-    # async def _avatar(self, ctx, user=None):
-    #     if user == None:
-    #         user = ctx.message.author
-    #     await self.sendAvatar(ctx, user)
+        avatarLink = member.avatar_url
+
+        avatarEmbed = discord.Embed(colour=discord.Colour.blurple())
+
+        avatarEmbed.set_image(url=avatarLink)
+        avatarEmbed.set_author(name=member, icon_url=avatarLink)
+
+        await ctx.send(embed=avatarEmbed)
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))

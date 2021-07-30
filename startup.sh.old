@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pm2 start ./bot.py --name "HamzaUtils" --interpreter python3 
+
+pm2 save

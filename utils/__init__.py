@@ -1,4 +1,4 @@
-import asyncio,  os, requests, json
+import asyncio, os, requests, json
 
 async def delete_message(message, ctx, time):
     await asyncio.sleep(time)
@@ -24,3 +24,8 @@ def get_config():
 def get_ip():
     res = requests.get('https://ident.me/')
     return str(res.content.decode('utf-8'))
+
+def get_yo_mama_joke():
+    url = 'https://yomomma-api.herokuapp.com/jokes'
+    res = requests.get(url)
+    return res.json()

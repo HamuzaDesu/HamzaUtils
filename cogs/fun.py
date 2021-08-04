@@ -1,4 +1,5 @@
 import asyncio
+from os import name
 import discord
 from discord.ext import commands
 
@@ -6,27 +7,25 @@ from discord_slash import cog_ext
 from discord_slash.utils import manage_commands
 from discord_slash.utils.manage_commands import create_option
 from discord_slash.model import SlashCommandOptionType
+from requests.models import ContentDecodingError
 
+from utils import get_yo_mama_joke
 
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=['gay'], brief='Refuses the gae')
-    async def gae(self, ctx):
-        await ctx.send("I'm not gay!")
-    
-    @commands.command(brief="I'm not dead. unless...?")
-    async def dead(self, ctx):
-        await ctx.send("I'm not dead")
-    
-    @commands.command(brief='gun go brrr')
-    async def shoot(self, ctx):
-        await ctx.send('Shoot yourself you pussy')
-    
-    @commands.command(brief='Tries to stop suicide')
-    async def suicide(self, ctx):
-        await ctx.send("Do it.")
+    @commands.command(aliases=['yomama', 'mama'])
+    async def yoMama(self, ctx):
+        await ctx.send(get_yo_mama_joke()['joke'])
+
+    @cog_ext.cog_subcommand(
+        base="yo",
+        name='mama',
+        description='Print out a yo mama joke'
+    )
+    async def _yoMama(self, ctx):
+        await ctx.send(content=f'{get_yo_mama_joke()["joke"]}')
 
     @commands.command()
     async def timer(self, ctx, time : int):
@@ -39,7 +38,6 @@ class Fun(commands.Cog):
         await ctx.send(f'{ctx.message.author.mention}, your timer has finished!')
 
 
-    
     @commands.command(aliases=['av', 'ava'])
     async def avatar(self, ctx, member: discord.Member=None):
         if member == None:
@@ -55,7 +53,6 @@ class Fun(commands.Cog):
 
     @cog_ext.cog_slash(
         name="avatar",
-        guild_ids=[685842225875386369],
         description="Display a users avatar",
         options=[
             create_option(
